@@ -19,6 +19,17 @@ export const useUserStore = defineStore('user', ()=>{
       })
      })
   }
+
+  function logout(){
+    return new Promise<void>((resolve,reject)=>{
+      AuthAPI.logout().then(()=>{
+        clearSessionAndCache();
+        resolve()
+      }).catch((error:unknown)=>{
+        reject(error)
+      })
+    })
+  }
   function refreshToken(){
     const refreshToken = getRefreshToken();
     return new Promise<void>((resolve,reject)=>{
@@ -59,6 +70,7 @@ export const useUserStore = defineStore('user', ()=>{
   return {
     userInfo,
     login,
+    logout,
     refreshToken,
     getUserInfo,
     clearSessionAndCache

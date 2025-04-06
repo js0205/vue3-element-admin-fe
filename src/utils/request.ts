@@ -40,7 +40,6 @@ request.interceptors.response.use(response => {
   if(response){
     const { code, msg } = response.data;
     if(code === ResultEnum.ACCESS_TOKEN_INVALID){
-      console.log("token 失效",config);
        return handleTokenRefresh(config);
     }else if (code === ResultEnum.REFRESH_TOKEN_INVALID) {
        await handleSessionExpired();
