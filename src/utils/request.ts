@@ -34,7 +34,7 @@ request.interceptors.response.use(response => {
   }
    ElMessage.error(msg || "系统出错");
    return Promise.reject(new Error(msg || "系统出错"));
-}, error => {
+}, async(error) => {
   console.error("error", error);
   const { config, response } = error;
   if(response){
@@ -42,8 +42,11 @@ request.interceptors.response.use(response => {
     if(code === ResultEnum.ACCESS_TOKEN_INVALID){
       console.log("token 失效",config);
        return handleTokenRefresh(config);
-    }else {
-        ElMessage.error(msg || "系统出错");
+    }else if (code === ResultEnum.REFRESH_TOKEN_INVALID) {
+       await handleSessionExpired();
+       return Promise.reject(new Error(msg || "系统出错"));
+    }else{
+      ElMessage.error(msg || "系统出错");
     }
   }
   return Promise.reject(error.message);

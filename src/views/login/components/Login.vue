@@ -1,10 +1,5 @@
 <template>
     <div class="login flex-center wh-full relative overflow-scroll">
-      <!-- 登录页头部 -->
-      <div class="flex-x-end absolute top-0 w-full p-4">
-        <el-switch v-model="isDark" inline-prompt active-icon="Moon" inactive-icon="Sunny" @change="toggleTheme" />
-        <lang-select class="ml-2 cursor-pointer" />
-      </div>
       <!-- 登录页内容 -->
       <div class="flex-center relative pb-5">
         <h2>vue3-element-admin</h2>
@@ -25,14 +20,11 @@
         </el-dropdown>
       </div>
       <el-form ref="loginFormRef" :model="loginFormData" :rules="loginRules" size="large">
-        <el-form-item>
+        <el-form-item prop="username">
           <el-input v-model="loginFormData.username" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input v-model="loginFormData.password" placeholder="请输入密码" />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="loginFormData.captchaCode" placeholder="请输入验证码" />
         </el-form-item>
         <!-- 验证码 -->
         <el-form-item prop="captchaCode">
@@ -63,11 +55,6 @@
           <el-button type="primary" class="w-full" @click="handleLoginSubmit">登录</el-button>
         </el-form-item>
       </el-form>
-      <!-- 登录页底部 -->
-      <el-text size="small" class="py-2.5! fixed bottom-0 text-center">
-        Copyright © 2021 - 2025 youlai.tech All Rights Reserved.
-        <a href="http://beian.miit.gov.cn/" target="_blank">皖ICP备20006496号-2</a>
-      </el-text>
       <div flex-center gap-10px>
         <el-text size="default">没有账号？</el-text>
         <el-link type="primary" :underline="false" @click="toOtherForm('register')">
@@ -142,7 +129,7 @@
           trigger: "blur",
         },
       ],
-      captchaKey: [
+      captchaCode: [
         {
           required: true,
           trigger: "change",
@@ -207,7 +194,7 @@
       codeLoading.value = false;
     }
   }
-  
+  // TODO:跳转不改变url
   const toOtherForm = (type: string) => {
     router.push({
       path: `/${type}`,

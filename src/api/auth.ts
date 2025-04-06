@@ -53,6 +53,13 @@ const AuthAPI = {
       },
     })
   },
+  /** 登出 */
+  logout: () => {
+    return request<any, any>({
+      url: `${Auth_BASE_URL}/logout`,
+      method: 'DELETE',
+    })
+  },
   /** 获取验证码接口 */
   getCaptcha: () => {
     return request<any, CaptchaInfo>({

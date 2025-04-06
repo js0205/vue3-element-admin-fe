@@ -2,11 +2,8 @@ import { useStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import AuthAPI, { type LoginFormData } from '@/api/auth';
 import { getRefreshToken, setAccessToken, setRefreshToken,clearToken } from "@/utils/auth";
+import UserAPI, { type UserInfo } from "@/api/user";
 
-interface UserInfo {
-  username: string;
-  password: string;
-}
 
 export const useUserStore = defineStore('user', ()=>{
   const userInfo = useStorage<UserInfo>("userInfo", {} as UserInfo);
@@ -37,11 +34,24 @@ export const useUserStore = defineStore('user', ()=>{
     })
   }
   function getUserInfo(){
+    return new Promise<UserInfo>((resolve,reject)=>{
+      UserAPI.getInfo().then((data: UserInfo)=>{
+        if(!data){
+          reject("获取用户信息失败")
+          return;
+        }
+        Object.assign(userInfo.value,{...data}); // 合并用户信息到 userInfo 中
+        resolve(data)
+      }).catch((error:unknown)=>{
+        reject(error)
+      })
+    })
   }
 
   function clearSessionAndCache(){
      return new Promise<void>((resolve)=>{
         clearToken();
+        userInfo.value = {} as UserInfo;
         resolve()
      })
   }
